@@ -1,7 +1,7 @@
 let fs = require('fs')
 let path = require('path')
 let moment = require('moment-timezone')
-let thumbnail = fs.readFileSync('./src/.jpg')
+let thumbnail = fs.readFileSync('./src/7ZZUlwdgRuyy5h80gI9A_0oNs5EnxhYD0VjNn.png')
 const defaultMenu = {
   before: `
 %readmore`.trimStart(),
