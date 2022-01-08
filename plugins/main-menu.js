@@ -190,8 +190,8 @@ let handler = async (m, { conn, usedPrefix: _p, text, isOwner, command }) => {
       }
       else {
         let array = Object.keys(arrayMenuFilter).map(v => ({
-          title: `🌹 ${arrayMenuFilter[v]} Menu,
-          description: `🎭 All ${arrayMenuFilter[v]} Features,
+          title: `-> ${arrayMenuFilter[v]} Menu`,
+          description: `• All ${arrayMenuFilter[v]} Features`,
           rowId: `.m ${arrayMenuFilter[v]}`
         }))
         let button = {
