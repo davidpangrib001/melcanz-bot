@@ -1,10 +1,11 @@
 let fs = require('fs')
 let path = require('path')
 let moment = require('moment-timezone')
+let thumbnail = fs.readFileSync('./src/.jpg')
 const defaultMenu = {
   before: `
 %readmore`.trimStart(),
-  header: '┌「 *%category* 」',
+  header: '■「 *%category* 」',
   body: '├ %cmd %islimit %isPremium',
   footer: '└────\n',
   after: `
@@ -12,6 +13,24 @@ const defaultMenu = {
 }
 let handler = async (m, { conn, usedPrefix: _p, text, isOwner, command }) => {
   try {
+// Fake troli
+    const reply = {
+    key: {
+        participant: '0@s.whatsapp.net'
+    },
+    message: {
+        orderMessage: {
+            itemCount: 2022,
+            itemCoun: 404,
+            surface: 404,
+            message: `I Am ${conn.user.name}`,
+            orderTitle: 'B',
+            thumbnail: thumbnail,
+            sellerJid: '0@s.whatsapp.net'
+        }
+    }
+}
+
     let package = JSON.parse(await fs.promises.readFile(path.join(__dirname, '../package.json')).catch(_ => '{}'))
     let { exp, limit, registered, name } = global.db.data.users[m.sender]
     let d = new Date(new Date + 3600000)
@@ -66,17 +85,17 @@ let handler = async (m, { conn, usedPrefix: _p, text, isOwner, command }) => {
       'audio': 'Pengubah Suara',
       'database': 'Database',
       'download': 'Downloader',
-      'fun': 'fun',
-      'dewasa': 'Menu 18+',
+      'fun': 'Fun',
+      'dewasa': '18+',
       'maker': 'Maker Menu',
       'game': `Games`,
-      'group': 'Grup',
+      'group': 'Group',
       'info': 'Info',
       'internet': 'Internet',
-      'jadibot': 'Jadi Bot',
+      'jadibot': 'Jadibot',
       'kerang': 'Kerang Ajaib',
       'nulis': 'Nulis',
-      'sticker': 'Stiker',
+      'sticker': 'Sticker',
       'tools': 'Tools',
       'vote': 'Voting',
       'xp': 'Exp & Limit',
@@ -90,7 +109,7 @@ let handler = async (m, { conn, usedPrefix: _p, text, isOwner, command }) => {
       'audio': 'Pengubah Suara'
     }
     if (teks == 'grup') tags = {
-      'group': 'Grup'
+      'group': 'Group'
     }
     if (teks == 'database') tags = {
       'database': 'Database'
@@ -99,17 +118,17 @@ let handler = async (m, { conn, usedPrefix: _p, text, isOwner, command }) => {
       'download': 'Downloader',
     }
     if (teks == 'fun') tags = {
-      'fun': 'fun',
+      'fun': 'Fun',
     }
         if (teks == 'dewasa') tags = {
-      'dewasa': 'Menu 18+',
+      'dewasa': 'EN ES EF WE',
     }
     if (teks == 'maker') tags = {
-      'maker': 'Maker Menu',
+      'maker': 'Maker',
     }
     if (teks == 'games') {
       if (!db.data.settings[conn.user.jid].game) {
-        await conn.sendButton(m.chat, 'game blm diaktifkan oleh owner!', wm, 'nyalakan', '.1 game', m)
+        await conn.sendButton(m.chat, 'Game belum diaktifkan oleh owner!', wm, 'Chat Owner', '.owner', m)
         throw 0
       }
       tags = {
@@ -124,11 +143,11 @@ let handler = async (m, { conn, usedPrefix: _p, text, isOwner, command }) => {
     }
     if (teks == 'jadibot') {
       if (!db.data.settings[conn.user.jid].jadibot) {
-        m.reply('mau ngapain?')
+        await conn.sendButton(m.chat, 'Jadibot belum diaktifkan oleh owner!', wm, 'Chat Owner', '.owner', m)
         throw 0
       }
       tags = {
-        'jadibot': 'Jadi Bot'
+        'jadibot': 'Multi Session'
       }
     }
     if (teks == 'kerang ajaib') tags = {
@@ -147,17 +166,17 @@ let handler = async (m, { conn, usedPrefix: _p, text, isOwner, command }) => {
       'xp': 'Exp & Limit'
     }
     if (teks == 'tanpa kategori') tags = {
-      '': 'Tanpa Kategori'
+      '': 'No Category'
     }
     if (teks == 'owner') {
       if (!isOwner) {
-        dfail('owner', m, conn)
+        await conn.sendButton(m.chat, 'This Menu Is Only For Owner!!', wm, 'Back To Menu', '.menu', m)
         throw 0
       }
       tags = {
         'owner': 'Owner',
         'host': 'Host',
-        'advanced': 'Advanced'
+        'advanced': 'Eval'
       }
     }
     if (teks == 'list') { // kalo teks ga sesuai arrayMenu bakal nampilin ini
@@ -165,22 +184,23 @@ let handler = async (m, { conn, usedPrefix: _p, text, isOwner, command }) => {
       let arrayMenuFilter = arrayMenu.filter(v => !['list'].includes(v))
       if (isBusiness) {
         return m.reply(`
-  ┌「 Menu 」\n${arrayMenuFilter.map(v => '├ ' + _p + command + ' ' + v).join`\n`}
+❏「 Menu Bot Wa Bisnis 」\n${arrayMenuFilter.map(v => '├ ' + _p + command + ' ' + v).join`\n`}
   └────
   `.trim())
       }
       else {
         let array = Object.keys(arrayMenuFilter).map(v => ({
-          title: arrayMenuFilter[v],
-          description: '',
+          title: `🌹 ${arrayMenuFilter[v]} Menu,
+          description: `🎭 All ${arrayMenuFilter[v]} Features,
           rowId: `.m ${arrayMenuFilter[v]}`
         }))
         let button = {
-          buttonText: 'klik disini',
-          description: `hai @${m.sender.split`@`[0]}, klik untuk melihat daftar perintah`,
+          buttonText: 'Click Here',
+          description: `Hello @${m.sender.split`@`[0]}, click 'Click Here' to see list of all commands/features`,
           title: 'menu'
         }
-        return conn.sendListM(m.chat, button, array, m)
+        return conn.sendListM(m.chat, button, array, reply)
+        // (reply) Fake troli:v
       }
     }
     let help = Object.values(global.plugins).filter(plugin => !plugin.disabled).map(plugin => {
@@ -236,7 +256,7 @@ let handler = async (m, { conn, usedPrefix: _p, text, isOwner, command }) => {
       readmore: readMore
     }
     text = text.replace(new RegExp(`%(${Object.keys(replace).sort((a, b) => b.length - a.length).join`|`})`, 'g'), (_, name) => '' + replace[name])
-    await conn.sendButtonLoc(m.chat, fla + encodeURIComponent(teks), text.trim(), `${ucapan()}`, 'donasi', '.donasi')
+    await conn.send2ButtonLoc(m.chat, fla + encodeURIComponent(ucapan()), text.trim(), `Napa mau baca`, 'Developer', '.owner', 'Speed', '.ping')
   } catch (e) {
     // conn.reply(m.chat, 'Maaf, menu sedang error', m)
     throw e
@@ -262,16 +282,16 @@ function ucapan() {
   const time = moment.tz('Asia/Jakarta').format('HH')
   res = "tidur banh, i love u"
   if (time >= 4) {
-    res = "selamat pagi"
+    res = "Good Pagi"
   }
   if (time > 10) {
-    res = "selamat sialng"
+    res = "Good Siang"
   }
   if (time >= 15) {
-    res = "selamat sore"
+    res = "Selamat afternoon"
   }
   if (time >= 18) {
-    res = "selamat malam"
+    res = "Selamat Night"
   }
   return res
 }
