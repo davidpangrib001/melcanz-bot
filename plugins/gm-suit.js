@@ -1,58 +1,41 @@
-let timeout = 90000
+/* 
+    Made by https://github.com/syahrularranger 
+    Jangan di hapus credit nya :)
+*/
+let timeout = 60000
+let poin = 500
+let poin_lose = -100
+let handler = async (m, { conn, usedPrefix }) => {
+  conn.suit = conn.suit ? conn.suit : {}
+  if (Object.values(conn.suit).find(room => room.id.startsWith('suit') && [room.p, room.p2].includes(m.sender))) throw 'Selesaikan suit mu yang sebelumnya'
+  if (!m.mentionedJid[0]) return m.reply(`_Siapa yang ingin kamu tantang?_\nTag orangnya.. Contoh\n\n${usedPrefix}suit @${owner[1]}`, m.chat, { contextInfo: { mentionedJid: [owner[1] + '@s.whatsapp.net'] } })
+  if (Object.values(conn.suit).find(room => room.id.startsWith('suit') && [room.p, room.p2].includes(m.mentionedJid[0]))) throw `Orang yang kamu tantang sedang bermain suit bersama orang lain :(`
+  let id = 'suit_' + new Date() * 1
+  let caption = `
+_*SUIT PvP*_
 
-let handler = async (m, { conn, usedPrefix, text, isOwner }) => {
-    if (!m.isGroup) {
-        if (!isOwner) {
-            dfail('group', m, conn)
-            throw false
-        }
-    }
-    conn.suit = conn.suit ? conn.suit : {}
-    if (Object.values(conn.suit).find(room => room.id.startsWith('suit') && [room.p, room.p2].includes(m.sender))) throw 'selesaikan suit mu yang sebelumnya'
-    let who = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : false
-    if (!who) return m.reply(`tag atau mention seseorang.\n\ncontoh:\n${usedPrefix}suit @${m.sender.split`@`[0]} ${db.data.users[m.sender].exp}`)
-    if (who === m.sender) throw 'tidak bisa menantang diri sendiri!'
-    let txt = text.replace('@' + who.split`@`[0], '').trim()
-    if (!txt) return m.reply(`uhm.. mau taruhan berapa XP?\n\ncontoh:\n${usedPrefix}suit @${m.sender.split`@`[0]} ${db.data.users[m.sender].exp}`)
-    if (isNaN(txt)) throw 'XP harus angka!'
-    let poin = parseInt(txt)
-    if (poin < 1) throw 'minimal 1 XP!'
-    if (db.data.users[m.sender].exp < poin) {
-        throw `XP kamu tidak cukup!`
-    }
-    if (db.data.users[who].exp < poin) {
-        throw `XP ${conn.getName(who)} tidak cukup!`
-    }
-    let poin_lose = poin
-    if (Object.values(conn.suit).find(room => room.id.startsWith('suit') && [room.p, room.p2].includes(who))) throw `yang kamu tag sedang bermain!`
-    let id = 'suit_' + new Date() * 1
-    let caption = `
-*Suit Game*
+@${m.sender.split`@`[0]} menantang @${m.mentionedJid[0].split`@`[0]} untuk bermain suit
 
-@${m.sender.split`@`[0]} menantang @${who.split`@`[0]} untuk bermain suit
-
-@${m.sender.split`@`[0]} bertaruh sebanyak ${poin} XP,
-menang: +${poin} XP
-kalah: -${poin} XP
-
-silahkan @${who.split`@`[0]} ketik Y untuk bermain, ketik N untuk menolaknya
+Silahkan @${m.mentionedJid[0].split`@`[0]} 
 `.trim()
-    conn.suit[id] = {
-        id: id,
-        p: m.sender,
-        p2: who,
-        status: 'wait',
-        chat: await conn.send2Button(m.chat, caption, wm, 'Y', 'Y', 'N', 'N', m),
-        waktu: setTimeout(async () => {
-            if (conn.suit[id]) await conn.reply(m.chat, `_Waktu suit habis_`, conn.suit[id].chat)
-            delete conn.suit[id]
-        }, timeout), poin, poin_lose, timeout
-    }
+  let footer = `Ketik "terima/ok/gas" untuk memulai suit\nKetik "tolak/gabisa/nanti" untuk menolak`
+  conn.suit[id] = {
+    chat: await conn.send2Button(m.chat, caption, footer, 'Terima', 'ok', 'Tolak', 'tolak', m, { contextInfo: { mentionedJid: conn.parseMention(caption) } }),
+    id: id,
+    p: m.sender,
+    p2: m.mentionedJid[0],
+    status: 'wait',
+    waktu: setTimeout(() => {
+      if (conn.suit[id]) conn.reply(m.chat, `_Waktu suit habis_`, m)
+      delete conn.suit[id]
+    }, timeout), poin, poin_lose, timeout
+  }
 }
 handler.tags = ['game']
-handler.help = ['suit'].map(v => v + ' [@tag] <jumlah xp>')
-handler.command = /^suit$/i
+handler.help = ['suitpvp', 'suit'].map(v => v + ' @tag')
+handler.command = /^suit(pvp)?$/i
 
+handler.group = true
 handler.game = true
 
 module.exports = handler
