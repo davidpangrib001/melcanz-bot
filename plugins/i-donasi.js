@@ -1,10 +1,10 @@
 let handler = async (m) => {
     m.reply(`
 ┌「 *donasi* 」
-├ https://saweria.co/ariffb
-├ https://saweria.co/ameys
-├ https://trakteer.id/ariffb/tip
-├ https://saweria.id/itsukichan
+├ Dana : +6283147787992
+├ GoPay: +6283147787992
+├ Pulsa: +6283147787992
+├ OVO  : +6283147787992
 └────
 `.trim())
 }
