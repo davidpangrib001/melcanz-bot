@@ -1,29 +1,39 @@
-const uploadImage = require('../lib/uploadImage')
-const fetch = require('node-fetch')
+// https://github.com/Nobuyaki
+// Jangan Hapus link githubnya bang :)
 
-let handler = async (m, { conn, usedPrefix, command }) => {
+const fetch = require('node-fetch')
+let handler = async (m, { conn, usedPrefix }) => {
   let q = m.quoted ? m.quoted : m
   let mime = (q.msg || q).mimetype || ''
-  if (!mime) throw `Kirim/balas gambar dengan perintah *${usedPrefix + command}*`
-  if (!/image\/(jpe?g|png)/.test(mime)) throw `Media tidak didukung!`
+  if (!mime) throw `Reply Foto/Kirim Foto Dengan Caption ${usedPrefix}wait`
+  if (!/image\/(jpe?g|png)/.test(mime)) throw `Mime ${mime} tidak support`
   let img = await q.download()
-  let url = await (uploadImage)(img)
+  await m.reply('Searching Anime Titles...')
   let anime = `data:${mime};base64,${img.toString('base64')}`
-  let res = await fetch(`https://api.trace.moe/search?cutBorders&url=${encodeURIComponent(url)}`)
-  if (!res.ok) throw eror
-  let json = await res.json()
-  let { anilist, filename, episode, from, to, similarity, video, image } = json.result[0]
-  conn.sendVideo(m.chat, video, `
-  ${similarity < 0.89 ? 'Saya memiliki keyakinan rendah tentang hal ini' : ''}
+  let response = await fetch('https://trace.moe/api/search', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ image: anime }),
+  })
+  if (!response.ok) throw 'Gambar tidak ditemukan!'
+  let result = await response.json()
+  let { is_adult, title, title_chinese, title_romaji, episode, season, similarity, filename, at, tokenthumb, anilist_id } = result.docs[0]
+  let link = `https://media.trace.moe/video/${anilist_id}/${encodeURIComponent(filename)}?t=${at}&token=${tokenthumb}`
+  let nobuyaki = `
+${similarity < 0.89 ? 'Saya Memiliki Keyakinan Rendah Tentang Hal Ini' : ''}
 
-Anilist: *${anilist}*
-Nama File: *${filename}*
-Kesamaan: *${(similarity * 100).toFixed(1)}%*
-Episode: *${episode.toString()}*
-  `.trim(), m)
+❏ Judul Jepang : *${title}*
+❏ Ejaan Judul : *${title_romaji}*
+❏ Similarity : *${(similarity * 100).toFixed(1)}%*
+❏ Episode : *${episode.toString()}*
+❏ Ecchi : *${is_adult ? 'Yes' : 'No'}*
+`.trim()
+  conn.sendFile(m.chat, link, 'srcanime.mp4', `${nobuyaki}`, m)
 }
-handler.help = ['wait']
+handler.help = ['wait (caption|reply image)']
 handler.tags = ['tools']
 handler.command = /^(wait)$/i
 
-module.exports = handler 
+module.exports = handler
