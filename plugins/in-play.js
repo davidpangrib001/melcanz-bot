@@ -44,7 +44,7 @@ let handler = async (m, { conn, command, text, usedPrefix }) => {
 
     } catch (e) {
 
-      m.reply(`Server ${server} error!${servers.length >= i + 1 ? '' : '\nmencoba server lain...'}`)
+      console.log(`server ${server} error!${servers.length >= i + 1 ? '' : '\ntrying another server...'}`)
 
     }
 
@@ -55,103 +55,20 @@ let handler = async (m, { conn, command, text, usedPrefix }) => {
   if (yt2 === false) throw 'semua server gagal'
 
   let { dl_link, thumb, title, filesize, filesizeF } = yt
+  await conn.send2ButtonLoc(m.chat, thumb, `
 
-  let konrasel = `*───「 YT Downloader 」───*
+*judul:* ${title}
 
-  
+*server y2mate:* ${usedServer}
 
-*Judul:* ${title}
-
-*Ukuran File Audio:* ${filesizeF}
-
-*Ukuran File Video:* ${yt2.filesizeF}
-
-*Server y2mate:* ${usedServer}`
-
-const template = send2ButtonLoc(m.key.remoteJid, proto.Message.fromObject({
-
-        templateMessage: {
-
-            hydratedTemplate: {
-
-                locationMessage: { jpegThumbnail: await (await fetch(thumb)).buffer()},
-
-                hydratedContentText: konrasel.trim(),
-
-                hydratedFooterText: wm,
-
-                hydratedButtons: [{
-
-                  index: 0,
-
-                   urlButton: {
-
-                        displayText: '🌏 Url YouTube',
-
-                        url: `${vid.url}`
-
-                    }
-
-                }, {
-
-                   quickReplyButton: {
-
-                        displayText: `🎵 Audio`,
-
-                        id: `.yta ${vid.url}`
-
-                    }
-
-                }, {
-
-                   quickReplyButton: {
-
-                        displayText: `📽 Video`,
-
-                        id: `.ytv ${vid.url}`
-
-                    }
-
-                }, {
-
-                    quickReplyButton: {
-
-                        displayText: `🔎 YT Search ${text}`,
-
-                        id: `.yts ${text}`
-
-                    },
-
-                    selectedIndex: 1
-
-                }]
-
-            }
-
-        }
-
-    }), { userJid: m.participant || m.key.remoteJid, quoted: m });
-
-    return await conn.relayMessage(
-
-        m.key.remoteJid,
-
-        template.message,
-
-        { messageId: template.key.id }
-
-    )
-
-//await sock.send3Template2UrlButtonLoc(m.chat,capt.trim(), wm, await (await fetch(thumb)).buffer(), 'Video', `.ytv ${vid.url}`, 'Audio', `.yta ${vid.url}`, 'Menu', '#menu', m)
+`.trim(), wm, `audio (${filesizeF})`, '.yta ' + vid.url, `video (${yt2.filesizeF})`, '.yt ' + vid.url, m)
 
 }
 
-handler.help = ['play'].map(v => v + ' <query>')
+handler.help = ['play'].map(v => v + ' <teks>')
 
-handler.tags = ['downloader']
+handler.tags = ['internet', 'download']
 
-handler.command = /^(dj|musik|song|lagu|p(lay)?)$/i
-
-handler.exp = 3
+handler.command = /^(p|play)$/i
 
 module.exports = handler
