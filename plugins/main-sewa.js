@@ -3,9 +3,9 @@ let handler = async (m, { conn }) => {
     pepe = 'https://telegra.ph/file/0dfb35a7c7d0ada2e75d1.jpg'
     baper = await fetch(pepe).then(a => a.buffer())
     let listMessage = {
-        "title": "melcanz-bot",
+        "title": "ZED🍃",
         "description": `
-*melcanz-bot*
+*ZED🍃-bot*
         
 1 Grup / 30 Hari
 Rp. 15,000 Dana, Ovo
@@ -35,9 +35,9 @@ tertarik? hubungi:
                 "productId": "4696956640315324",
                 "jpegThumbnail": baper
             },
-            "businessOwnerJid": "6283128734012@s.whatsapp.net"
+            "businessOwnerJid": "94771323434@s.whatsapp.net"
         },
-        "footerText": "wa.me/6287755080455\nwa.me/6283128734012"
+        "footerText": "wa.me/94771323434\nwa.me/94771323434"
     }
     conn.sendMessage(m.chat, listMessage, 'listMessage', { quoted: m, contextInfo: { mentionedJid: conn.parseMention(listMessage.description) } })
 }
