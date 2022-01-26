@@ -10,11 +10,11 @@ global.APIKeys = {
   'https://melcanz.com': '2tQnyfX2'
 }
 
-global.packname = 'Eleina'
-global.author = '© Eleinachan'
-global.wm = '© Eleinachan'
-global.eror = 'error pack'
-global.wait = 'wait pack'
+global.packname = 'ZED'
+global.author = '©ZED〽'
+global.wm = '©ZED〽'
+global.eror = 'error'
+global.wait = 'wait🍃'
 global.benar = '✅'
 global.salah = '❌'
 global.dikit = 'dikit lagi pack'
