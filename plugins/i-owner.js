@@ -1,5 +1,5 @@
 let handler = async function (m, { conn }) {
-  conn.sendContact(m.chat, '60199782326', 'Adii')
+  conn.sendContact(m.chat, '94771323434', 'ZED')
 }
 handler.help = ['owner']
 handler.tags = ['info']
