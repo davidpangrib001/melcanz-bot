@@ -86,7 +86,6 @@ let handler = async (m, { conn, usedPrefix: _p, text, isOwner, command }) => {
       'database': 'Database',
       'download': 'Downloader',
       'fun': 'Fun',
-      'dewasa': '18+',
       'maker': 'Maker Menu',
       'game': `Games`,
       'group': 'Group',
@@ -184,14 +183,14 @@ let handler = async (m, { conn, usedPrefix: _p, text, isOwner, command }) => {
       let arrayMenuFilter = arrayMenu.filter(v => !['list'].includes(v))
       if (isBusiness) {
         return m.reply(`
-❏「 Menu Bot Wa Bisnis 」\n${arrayMenuFilter.map(v => '├ ' + _p + command + ' ' + v).join`\n`}
+❏「 Menu Bot」\n${arrayMenuFilter.map(v => '├ ' + _p + command + ' ' + v).join`\n`}
   └────
   `.trim())
       }
       else {
         let array = Object.keys(arrayMenuFilter).map(v => ({
           title: `🌹 ${arrayMenuFilter[v].toUpperCase()} MENU`,
-          description: `🎭 ${arrayMenuFilter[v]} features`,
+          description: `🍃${arrayMenuFilter[v]} features`,
           rowId: `.m ${arrayMenuFilter[v]}`
         }))
         let button = {
@@ -282,16 +281,16 @@ function ucapan() {
   const time = moment.tz('Asia/Jakarta').format('HH')
   res = "tidur banh, i love u"
   if (time >= 4) {
-    res = "Good Pagi"
+    res = "GOOD MORNING"
   }
   if (time > 10) {
-    res = "Good Siang"
+    res = "GOOD MORNING"
   }
   if (time >= 15) {
-    res = "Selamat afternoon"
+    res = "GOOD afternoon"
   }
   if (time >= 18) {
-    res = "Selamat Night"
+    res = "GOOD Night"
   }
   return res
 }
