@@ -1,16 +1,4 @@
-const {
 
-    //default: makeWASocket,
-
-    //useSingleFileAuthState,
-
-    WAMessage,
-
-    proto,
-
-    generateWAMessageFromContent
-
-  } = require('@adiwajshing/baileys-md')
 
 const { servers, yta, ytv } = require('../lib/y2mate')
 
