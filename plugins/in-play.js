@@ -68,7 +68,7 @@ let handler = async (m, { conn, command, text, usedPrefix }) => {
 
 *Server y2mate:* ${usedServer}`
 
-const template = generateWAMessageFromContent(m.key.remoteJid, proto.Message.fromObject({
+const template = send2ButtonLoc(m.key.remoteJid, proto.Message.fromObject({
 
         templateMessage: {
 
